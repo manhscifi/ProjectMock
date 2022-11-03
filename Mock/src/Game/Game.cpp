@@ -8,9 +8,7 @@ Game::Game()
     if (!fs::is_directory(DATABASE_DIR))
     {
         fs::create_directories(DATABASE_DIR);
-
     }
-
 }
 void Game::registerPlayer()
 {
@@ -121,22 +119,10 @@ void Game::initGame()
             registerPlayer();
         }
         cout << "Let's start...\n";
-        Sleep(3000);
+        Sleep(1000);
         system("cls");
         initGame();
     }
-
-    /*for (auto i = mPlayerList.begin(); i != mPlayerList.end(); i++)
-    {
-        if (mOne.getName() == i->first)
-        {
-            mOne = *(i->second);
-        }
-        if (mTwo.getName() == i->first)
-        {
-            mTwo = *(i->second);
-        }
-    }*/
 }
 void Game::clearGame()
 {
@@ -288,7 +274,7 @@ void Game::playGame()
     mPlayerList[mOne.getName()] = make_shared<Player>(mOne);
     mPlayerList[mTwo.getName()] = make_shared<Player>(mTwo);
 }
-
+//
 void Game::loadPlayerList()
 {
     ifstream myfile(PLAYERS_DATABASE);
@@ -341,10 +327,6 @@ void Game::updatePlayerList()
         }
         myfile.close();
     }
-    /*else
-    {
-        cout << "Unable to write players information to ini file.\n";
-    }*/
 }
 //sort players by rate
 bool Game::comparePlayersByRate(shared_ptr<Player>& a, shared_ptr<Player>& b)
@@ -359,11 +341,6 @@ bool Game::comparePlayersByRate(shared_ptr<Player>& a, shared_ptr<Player>& b)
 }
 void Game::showPlayers()
 {
-    //if (mPlayerList.size() == 0)
-    //{
-    //    loadPlayerList();
-    //}
-    //
     if (mPlayerList.size())
     {
         vector<shared_ptr<Player>> temp;
@@ -420,7 +397,6 @@ void  Game::loadMatchRecord()
 void Game::updateMatchRecord()
 {
     ofstream myfile(REPLAY_DATABASE); //to overwrite data
-    //ofstream myfile(path, ios_base::app); //to append data
     if (myfile.is_open() && mGameRecord.size())
     {
         myfile << mGameRecord[mGameRecord.size() - 1] + "\n";
@@ -430,10 +406,6 @@ void Game::updateMatchRecord()
         }
         myfile.close();
     }
-    /*else
-    {
-        cout << "Unable to write player record from ini file.\n";
-    }*/
 }
 void Game::replayMatch()
 {
