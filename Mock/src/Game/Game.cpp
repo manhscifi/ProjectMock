@@ -428,7 +428,7 @@ void Game::replayMatch()
             if (i != mGameRecord.size() - 1)
             {
                 cout << "Next match...\n";
-                Sleep(2500);
+                Sleep(2000);
                 tempCaro.assign(SIZE * SIZE, EMPTY);
                 system("cls");
             }
