@@ -36,7 +36,7 @@ void Game::registerPlayer()
     } while (!validEmail);
     shared_ptr<Player> player = make_shared<Player>(name, age, gender, email);
     mPlayerList[name] = player;
-    Sleep(500);
+    Sleep(200);
 }
 bool Game::isNameInList(const string& name)
 {
