@@ -334,7 +334,6 @@ public:
                 /*sendDataToClient(client.client_socket,
                     "Please wait!");*/
             }
-
         }
         if (msg.find("position/") != string::npos)
         {
@@ -386,7 +385,6 @@ public:
 
             mPlayerList[temp.player.getName()] = make_shared<Player>(temp.player);
             mPlayerList[client.player.getName()] = make_shared<Player>(client.player);
-            showPlayers();
             updatePlayerList();
         }
     }
@@ -399,7 +397,6 @@ public:
         {
             rcvData[BUFFER_LENGHT] = '\0';
             processClientMessage(string(rcvData), client);
-
         }
         if (byte <= 0)
         {
@@ -487,41 +484,5 @@ public:
                 break;
             }
         }
-    }
-    //
-    void showPlayers()
-    {
-        if (mPlayerList.size())
-        {
-            vector<shared_ptr<Player>> temp;
-            for (auto i = mPlayerList.begin(); i != mPlayerList.end(); i++)
-            {
-                temp.push_back(i->second);
-            }
-            sort(temp.begin(), temp.end(), &comparePlayersByRate);
-
-            int count = 1;
-            for (auto i = temp.begin(); i != temp.end(); i++)
-            {
-                cout << "[";
-                cout <<count;
-                cout << "] ";
-                printPlayer((*i)->getName(), (*i)->getRate(), (*i)->getWin(), (*i)->getLose(), (*i)->getTie());
-                count++;
-            }
-        }
-        else
-        {
-            cout << "Empty\n";
-        }
-    }
-    void printPlayer(string name, string rate, int numOfWin, int numOfLose, int numOfTie)
-    {
-        cout << "Player name: " << name << endl;
-        cout << "- Rate: " << rate << endl;
-        cout << "- Win: " << numOfWin << endl;
-        cout << "- Lose: " << numOfLose << endl;
-        cout << "- Tie: " << numOfTie << endl;
-        cout << "\n";
     }
 };

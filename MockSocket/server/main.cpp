@@ -3,9 +3,6 @@
 #include"TCPServerSelect.h"
 using namespace std;
 
-#define PORT 5150 
-
-
 int main()
 {
 	TCPServerSelect server;
