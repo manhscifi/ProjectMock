@@ -151,6 +151,7 @@
     <ClCompile Include="src\Game\Game.cpp" />
     <ClCompile Include="src\IO\IO.cpp" />
     <ClCompile Include="src\Menu\Menu.cpp" />
+    <ClCompile Include="src\TCPClient.cpp" />
     <ClCompile Include="src\UserInput\UserInput.cpp" />
   </ItemGroup>
   <ItemGroup>
