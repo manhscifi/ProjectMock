@@ -33,7 +33,7 @@ int IO::inputAge()
 	} while (!valid);
 	return age;
 }
-string  IO::inputGender()
+string IO::inputGender()
 {
 	string gender;
 	bool valid;
@@ -49,7 +49,7 @@ string  IO::inputGender()
 	} while (!valid);
 	return gender;
 }
-string  IO::inputEmail()
+string IO::inputEmail()
 {
 	string email;
 	bool valid;
