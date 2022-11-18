@@ -45,7 +45,7 @@ private:
     int addressSize;
     // 
     vector<Client> clientList;
-    vector<Room*> roomList;
+    vector<shared_ptr<Room>> roomList;
 
 public:
     TCPServer();
@@ -61,15 +61,17 @@ public:
     //
     int getClientPort(int clientSocket);
 
-    string removeAll(string str, const string& from);
-
     void processClientMessage(string msg, Client& client);
 
     void handleClient(Client client);
 
-    Room* getAvailableRoom();
+    shared_ptr<Room> getAvailableRoom();
 
     void init(int port);
 
     void closeSocket(int socket);
+
+    string removeAll(string str, const string& from);
+
+    bool isNotLogin(const string& name);
 };

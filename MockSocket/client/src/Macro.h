@@ -6,7 +6,7 @@
 #define RED 12
 #define BLUE 9
 #define DEFAULT 15
-
+#define SOCKET_RECV_TIMEOUT_SEC 5
 #define BUFFER_LENGHT 1024
 #define PORT 5150
 #define MAX_ATTEMPT 5

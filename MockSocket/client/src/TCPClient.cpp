@@ -44,7 +44,7 @@ bool TCPClient::connectToServer(string address, int port)
     clientAddr.sin_port = htons(port);
     clientAddr.sin_addr.s_addr = inet_addr(address.c_str());
 
-
+    //setSockOpt();
     int connect_status = connect(clientSocket, (SOCKADDR*)&clientAddr, clientAddrSize);
 
     if (connect_status == SOCKET_ERROR)
@@ -111,33 +111,23 @@ int TCPClient::getPort()
     return htons(clientAddr.sin_port);
 }
 
-void TCPClient::closeSocket()
+void TCPClient::closeSocket(string str)
 {
     bool closeSoc = false, leanupWSAC = false;
-    if (closesocket(clientSocket) != 0)
+    if (closesocket(clientSocket) == 0)
     {
-        cout << "Closesocket() failed! Error code: " << WSAGetLastError() << endl;
-    }
-    else
-    {
-        //cout << "Client: closesocket() is OK." << endl;
         closeSoc = true;
     }
 
     // When your application is finished call WSACleanup.
     //cout << "Client: Cleaning up..." << endl;
-    if (WSACleanup() != 0)
+    if (WSACleanup() == 0)
     {
-        cout << "WSACleanup() failed! Error code: " << WSAGetLastError() << endl;
-    }
-    else
-    {
-        //cout << "Client: WSACleanup() is OK." << endl;
         leanupWSAC = true;
     }
 
     if (closeSoc && leanupWSAC)
     {
-        cout << "Loged out\n";
+        cout << str << endl;
     }
 }

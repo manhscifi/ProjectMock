@@ -13,12 +13,14 @@ void Game::login()
 	if (mStatusLogin == true)
 	{
 		IO::colorize("You loged in already.\n", RED);
+		IO::pause();
 	}
 	else
 	{
 		mClient.connectToServer("127.0.0.1", PORT);
 		int count = 0;
 		bool userbool = true;
+		bool passbool = true;
 		while (count < MAX_ATTEMPT && userbool == true)
 		{
 			mName = IO::inputName();
@@ -31,17 +33,21 @@ void Game::login()
 			}
 			else
 			{
-				cout << res << endl;
+				cout << "\t";
+				IO::colorize(res, RED);
+				cout << "\n";
 			}
 			count++;
 			if (count == MAX_ATTEMPT)
 			{
-				IO::colorize("Login fail. Please login again.\n", RED);
+				passbool = false;
+				mClient.closeSocket("Disconnected to server.\n");
+				IO::colorize("Login fail. Please login again.\n", RED);					
+				IO::pause();				
 			}
 		}
 
 		count = 0;
-		bool passbool = true;
 		while (count < MAX_ATTEMPT && passbool == true)
 		{
 			string passWord = IO::inputPassWord();
@@ -52,15 +58,18 @@ void Game::login()
 				IO::colorize("You have loged in.\n", BLUE);
 				mStatusLogin = true;
 				passbool = false;
+				IO::pause();
 			}
 			else
 			{
-				IO::colorize("Password incorrect.\n", RED);
+				IO::colorize("\tPassword incorrect.\n", RED);
 			}
 			count++;
 			if (count == MAX_ATTEMPT)
 			{
+				mClient.closeSocket("Disconnected to server.\n");
 				IO::colorize("Login fail. Please login again.\n", RED);
+				IO::pause();
 			}
 		}
 	}
@@ -70,6 +79,7 @@ void Game::registerPlayer()
 	if (mStatusLogin == true)
 	{
 		cout << "You loged in already.\n";
+		IO::pause();
 	}
 	else
 	{
@@ -109,6 +119,9 @@ void Game::registerPlayer()
 		}
 
 		mClient.sendDataToSever("register/done/");
+
+		cout << "Resgisteration done.\n";
+		IO::pause();
 	}
 }
 void Game::getInfo()
@@ -131,7 +144,7 @@ void Game::combat()
 	{
 		mClient.sendDataToSever("combat/");
 		cout << "Please wait\n";
-		//nhan tin da dc day vao room
+
 		string res = mClient.receiveDataFromSever();
 		cout << res << endl;
 
@@ -180,6 +193,12 @@ void Game::combat()
 			{
 				cout << symother << " turn\n";
 				string msg = mClient.receiveDataFromSever();
+				if (msg == "esc/")
+				{
+					cout << "The other player is out.\n";
+					run = false;
+					continue;
+				}
 				int pos2 = stoi(removeAll(msg, "position/"));
 				mCaro[pos2] = symother;
 				system("cls");
@@ -215,7 +234,7 @@ void Game::closeClient()
 	if (mStatusLogin)
 	{
 		mStatusLogin = false;
-		mClient.closeSocket();
+		mClient.closeSocket("Loged out.\n");
 	}
 	else
 	{

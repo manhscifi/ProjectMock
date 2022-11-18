@@ -23,5 +23,7 @@ public:
 	static void printPlayer(string name, string rate, int numOfWin, int numOfLose, int numOfTie);
 	//color
 	static void colorize(string str, int color);
+	//
+	static void pause();
 };
 

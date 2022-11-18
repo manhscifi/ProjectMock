@@ -9,12 +9,6 @@ Menu::Menu()
    run();
 }
 
-void pause()
-{
-    cout << "Press any key to return menu.\n";
-    cin.ignore(100000, '\n');
-}
-
 BOOL WINAPI Menu::ctrl_handler(DWORD event)
 {
     if (event == CTRL_CLOSE_EVENT) {
@@ -50,7 +44,6 @@ void Menu::run()
             //cout << "Dang nhap\n"; 
             system("cls");
             game.login();
-            pause();
             break;
         }
         case registerPlayer:
@@ -65,28 +58,28 @@ void Menu::run()
             //cout << "\tPlayer:\n";
             game.getInfo();
             cout << "\n";
-            pause();            
+            IO::pause();
             break;
         }
         case combat:
         {
             system("cls");
             game.combat();
-            pause();
+            IO::pause();
             break;
         }
         case close:
         {
             system("cls");
             game.closeClient();
-            pause();
+            IO::pause();
             break;
         }
         default:
         {
             system("cls");
             cout << "Option 1 - " << close << ".\n\n";
-            pause();
+            IO::pause();
         }
         }
 	}    

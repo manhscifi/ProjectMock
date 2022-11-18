@@ -45,7 +45,7 @@ int IO::inputAge()
 	} while (!valid);
 	return age;
 }
-string  IO::inputGender()
+string IO::inputGender()
 {
 	string gender;
 	bool valid;
@@ -61,7 +61,7 @@ string  IO::inputGender()
 	} while (!valid);
 	return gender;
 }
-string  IO::inputEmail()
+string IO::inputEmail()
 {
 	string email;
 	bool valid;
@@ -134,4 +134,9 @@ void IO::colorize(string str, int color)
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 	cout << str;
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), DEFAULT);
+}
+void IO::pause()
+{
+	cout << "Press any key to return menu.\n";
+	cin.ignore(100000, '\n');
 }
