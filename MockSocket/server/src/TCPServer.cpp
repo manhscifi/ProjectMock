@@ -270,6 +270,12 @@ void TCPServer::processClientMessage(string msg, Client& client)
         else
         {
             tempRoom->roomStatus = statusNotFull;
+            Sleep(15000);
+            if (tempRoom->clientInRoom.size() != MAX_CLIENTS_IN_ROOM)
+            {
+                sendDataToClient(client.client_socket, "timeout/");
+                roomList.erase(remove(roomList.begin(), roomList.end(), tempRoom), roomList.end());
+            }
         }
     }
     if (msg.find("position/") != string::npos)
@@ -436,7 +442,6 @@ void TCPServer::closeSocket(int socket)
     }
     closesocket(socket);
 }
-
 //
 int TCPServer::getClientPort(int clientSocket)
 {

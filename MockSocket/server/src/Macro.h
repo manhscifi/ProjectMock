@@ -4,9 +4,6 @@
 #define DATABASE_DIR "./data"
 #define PLAYERS_DATABASE "./data/players.ini"
 #define REPLAY_DATABASE "./data/replay.ini"
-#define RED 12
-#define BLUE 9
-#define DEFAULT 15
 //
 
 int const MAX_CLIENTS_IN_ROOM = 2;

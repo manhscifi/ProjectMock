@@ -4,6 +4,7 @@
 #define EMPTY ' '
 #define ALIGN (TABLE_SIZE+1)+3*TABLE_SIZE
 #define RED 12
+#define GREEN 10
 #define BLUE 9
 #define DEFAULT 15
 #define SOCKET_RECV_TIMEOUT_SEC 5

@@ -12,7 +12,7 @@ void Game::login()
 {
 	if (mStatusLogin == true)
 	{
-		IO::colorize("You loged in already.\n", RED);
+		IO::colorize("Already logged in.\n", RED);
 		IO::pause();
 	}
 	else
@@ -28,7 +28,7 @@ void Game::login()
 			string res = mClient.receiveDataFromSever();
 			if (res == "login/username/OK")
 			{
-				cout << "\tUsername OK\n";
+				IO::colorize("\tUsername OK\n", GREEN);
 				userbool = false;
 			}
 			else
@@ -42,7 +42,7 @@ void Game::login()
 			{
 				passbool = false;
 				mClient.closeSocket("Disconnected to server.\n");
-				IO::colorize("Login fail. Please login again.\n", RED);					
+				IO::colorize("Logged in fail. Please log in again.\n", RED);					
 				IO::pause();				
 			}
 		}
@@ -55,7 +55,7 @@ void Game::login()
 			string res = mClient.receiveDataFromSever();
 			if (res == "login/password/OK")
 			{
-				IO::colorize("You have loged in.\n", BLUE);
+				IO::colorize("Logged in successful.\n", GREEN);
 				mStatusLogin = true;
 				passbool = false;
 				IO::pause();
@@ -68,7 +68,7 @@ void Game::login()
 			if (count == MAX_ATTEMPT)
 			{
 				mClient.closeSocket("Disconnected to server.\n");
-				IO::colorize("Login fail. Please login again.\n", RED);
+				IO::colorize("Log in fail. Please log in again.\n", RED);
 				IO::pause();
 			}
 		}
@@ -78,7 +78,7 @@ void Game::registerPlayer()
 {
 	if (mStatusLogin == true)
 	{
-		cout << "You loged in already.\n";
+		IO::colorize("Already logged in.\n", RED);
 		IO::pause();
 	}
 	else
@@ -91,7 +91,7 @@ void Game::registerPlayer()
 		//cout << res << endl;
 		while (res.find("username/existed") != string::npos)
 		{
-			cout << "Username existed\n";
+			IO::colorize("Username existed.\n", RED);
 			name = IO::inputName();
 			mClient.sendDataToSever("register/name/" + name);
 			res = mClient.receiveDataFromSever();
@@ -112,7 +112,7 @@ void Game::registerPlayer()
 
 		while (res.find("email/existed") != std::string::npos)
 		{
-			cout << "Email existed\n";
+			IO::colorize("Email existed.\n", RED);
 			string email = IO::inputEmail();
 			mClient.sendDataToSever("register/email/" + email);
 			res = mClient.receiveDataFromSever();
@@ -120,7 +120,7 @@ void Game::registerPlayer()
 
 		mClient.sendDataToSever("register/done/");
 
-		cout << "Resgisteration done.\n";
+		IO::colorize("Resgisteration done.\n", GREEN);
 		IO::pause();
 	}
 }
@@ -146,83 +146,91 @@ void Game::combat()
 		cout << "Please wait\n";
 
 		string res = mClient.receiveDataFromSever();
-		cout << res << endl;
-
-		char symyou = ' ', symother = ' ';
-
-		res.pop_back();
-		symyou = res.back();
-		int turn = 0;
-		if (symyou == symbolX)
+		if (res == "timeout/")
 		{
-			symother = symbolO;
-			turn = 0;
+			IO::colorize("Wait to long\n", RED);
 		}
-		else if (symyou == symbolO)
+		else 
 		{
-			symother = symbolX;
-			turn = 1;
-		}
+			cout << res << endl;
 
-		bool run = true;
-		IO::printCaro(mCaro, " ");
-		while (run)
-		{
-			if (turn % 2 == 0)
+			char symyou = ' ', symother = ' ';
+
+			res.pop_back();
+			symyou = res.back();
+			int turn = 0;
+			if (symyou == symbolX)
 			{
-				cout << symyou << " turn\n";
-				int pos = inputPosition();
-				string temp = "position/" + to_string(pos);
+				symother = symbolO;
+				turn = 0;
+			}
+			else if (symyou == symbolO)
+			{
+				symother = symbolX;
+				turn = 1;
+			}
 
-				mClient.sendDataToSever(temp);
-				turn++;
-				mRemaining--;
-				system("cls");
-				mCaro[pos] = symyou;
-				IO::printCaro(mCaro, mName);
-				if (isWinner(symyou))
+			bool run = true;
+			IO::printCaro(mCaro, " ");
+			while (run)
+			{
+				if (turn % 2 == 0)
 				{
-					cout << symyou << " is winner.\n";
-					mClient.sendDataToSever("ketqua/win: " + string(1, symyou));
+					cout << symyou << " turn\n";
+					int pos = inputPosition();
+					string temp = "position/" + to_string(pos);
+
+					mClient.sendDataToSever(temp);
+					turn++;
+					mRemaining--;
+					system("cls");
+					mCaro[pos] = symyou;
+					IO::printCaro(mCaro, mName);
+					if (isWinner(symyou))
+					{
+						cout << symyou << " is winner.\n";
+						mClient.sendDataToSever("ketqua/win: " + string(1, symyou));
+						run = false;
+						continue;
+					}
+				}
+
+				if (turn % 2 == 1)
+				{
+					cout << symother << " turn\n";
+					string msg = mClient.receiveDataFromSever();
+					if (msg == "esc/")
+					{
+						cout << "The other player is out.\n";
+						run = false;
+						continue;
+					}
+					int pos2 = stoi(removeAll(msg, "position/"));
+					mCaro[pos2] = symother;
+					system("cls");
+					turn++;
+					mRemaining--;
+					IO::printCaro(mCaro, mName);
+					if (isWinner(symother))
+					{
+						cout << symother << " is winner.\n";
+						//client.sendDataToSever("ketqua/win: " + string(1, symother));
+						run = false;
+						continue;
+					}
+				}
+
+				if (mRemaining == 0)
+				{
+					cout << "Tie\n";
+					mClient.sendDataToSever("ketqua/Tie");
 					run = false;
 					continue;
 				}
 			}
-
-			if (turn % 2 == 1)
-			{
-				cout << symother << " turn\n";
-				string msg = mClient.receiveDataFromSever();
-				if (msg == "esc/")
-				{
-					cout << "The other player is out.\n";
-					run = false;
-					continue;
-				}
-				int pos2 = stoi(removeAll(msg, "position/"));
-				mCaro[pos2] = symother;
-				system("cls");
-				turn++;
-				mRemaining--;
-				IO::printCaro(mCaro, mName);
-				if (isWinner(symother))
-				{
-					cout << symother << " is winner.\n";
-					//client.sendDataToSever("ketqua/win: " + string(1, symother));
-					run = false;
-					continue;
-				}
-			}
-
-			if (mRemaining == 0)
-			{
-				cout << "Tie\n";
-				mClient.sendDataToSever("ketqua/Tie");
-				run = false;
-				continue;
-			}
+			clearGame();
 		}
-		clearGame();
+		
 	}
 	else
 	{
@@ -234,11 +242,11 @@ void Game::closeClient()
 	if (mStatusLogin)
 	{
 		mStatusLogin = false;
-		mClient.closeSocket("Loged out.\n");
+		mClient.closeSocket("Logged out.\n");
 	}
 	else
 	{
-		cout << "Not log in\n";
+		cout << "Not logged in\n";
 	}
 }
 //
