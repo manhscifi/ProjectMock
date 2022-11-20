@@ -52,11 +52,9 @@ bool TCPServer::initListeningSocket(int port)
         cout << "Server: socket() is OK!" << endl;
     }
 
-    // Set up a SOCKADDR_IN structure that will tell bind that we
-    // want to receive datagrams from all interfaces using port 5150.
     // The IPv4 family
     address.sin_family = AF_INET;
-    // Port no. 5150
+    // Port
     address.sin_port = htons(port);
     // From all interface (0.0.0.0) // INADDR_ANY
     address.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -80,7 +78,7 @@ bool TCPServer::initListeningSocket(int port)
     int listen_status = listen(master_socket, 1);
     if (listen_status == SOCKET_ERROR)
     {
-        cout << "listen failed with error: " << WSAGetLastError() << endl;
+        cout << "Listen failed with error: " << WSAGetLastError() << endl;
         closesocket(master_socket);
         WSACleanup();
         system("pause");
@@ -88,7 +86,7 @@ bool TCPServer::initListeningSocket(int port)
     }
 
     //accept the incoming connection 
-    puts("Waiting for connections ...");
+    cout << "Waiting for connections ...\n";
 
     return true;
 }
@@ -149,7 +147,7 @@ void TCPServer::processClientMessage(string msg, Client& client)
             else
             {
                 sendDataToClient(client.client_socket,
-                    "Username '" + name + "' is not in database or already loged in.");
+                    "Username '" + name + "' is not in database or already logged in.");
             }
         }
         if (login.find("password/") != string::npos)
@@ -262,8 +260,7 @@ void TCPServer::processClientMessage(string msg, Client& client)
         if (tempRoom->clientInRoom.size() == MAX_CLIENTS_IN_ROOM)
         {
             tempRoom->roomStatus = statusFull;
-           /* Client temp = (client.client_socket == tempRoom->clientInRoom[0].client_socket) ?
-                tempRoom->clientInRoom[1] : tempRoom->clientInRoom[0];*/
+           
             sendDataToClient(client.client_socket, temp.player.getName() + " is X. You are O.");
             sendDataToClient(temp.client_socket, client.player.getName() + " is O. You are X.");
         }
@@ -280,35 +277,11 @@ void TCPServer::processClientMessage(string msg, Client& client)
     }
     if (msg.find("position/") != string::npos)
     {
-        /*Client temp;
-        for (unsigned i = 0; i < roomList.size(); i++)
-        {
-            for (unsigned j = 0; j < roomList[i]->clientInRoom.size(); j++)
-            {
-                if (client.client_socket != roomList[i]->clientInRoom[j].client_socket)
-                {
-                    temp = roomList[i]->clientInRoom[j];
-                    break;
-                }
-            }
-        }*/
         string pos = removeAll(msg, "position/");
         sendDataToClient(temp.client_socket, pos);        
     }
     if (msg.find("ketqua/") != string::npos)
     {
-        /*Client temp;
-        for (unsigned i = 0; i < roomList.size(); i++)
-        {
-            for (unsigned j = 0; j < roomList[i]->clientInRoom.size(); j++)
-            {
-                if (client.client_socket != roomList[i]->clientInRoom[j].client_socket)
-                {
-                    temp = roomList[i]->clientInRoom[j];
-                    break;
-                }
-            }
-        }*/
         string pos = removeAll(msg, "ketqua/");
 
         if (pos == "win: X")

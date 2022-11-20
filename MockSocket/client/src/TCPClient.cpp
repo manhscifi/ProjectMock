@@ -16,12 +16,7 @@ bool TCPClient::connectToServer(string address, int port)
         // Clean up
         WSACleanup();
         system("pause");
-        // Exit with error
         return false;
-    }
-    else
-    {
-        //cout << "Client: The Winsock DLL status is " << wsaData.szSystemStatus << endl;
     }
 
     clientSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -32,14 +27,10 @@ bool TCPClient::connectToServer(string address, int port)
         // Clean up
         WSACleanup();
         system("pause");
-        // Exit with error
         return false;
     }
-    else
-    {
-        // cout << "Client: socket() is OK!\n";
-    }
 
+    //
     clientAddr.sin_family = AF_INET;
     clientAddr.sin_port = htons(port);
     clientAddr.sin_addr.s_addr = inet_addr(address.c_str());
@@ -52,7 +43,6 @@ bool TCPClient::connectToServer(string address, int port)
         closesocket(clientSocket);
         clientSocket = INVALID_SOCKET;
         system("pause");
-        // Exit with error
         return false;
     }
     else
